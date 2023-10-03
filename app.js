@@ -1,11 +1,12 @@
 require("dotenv").config();
 require("express-async-errors");
 const express = require("express");
-const { connectDB } = require("./db/connectDB");
+
 const errorHandler = require("./middlewares/error-handler");
 const notFound = require("./middlewares/not-found");
 const authMiddleware = require("./middlewares/auth");
 const product = require("./route/productRouter");
+const user = require("./route/userRoute");
 const app = express();
 const cloudinary = require("cloudinary").v2;
 const fileUpload = require("express-fileupload");
@@ -26,7 +27,8 @@ cloudinary.config({
 });
 //routes
 app.get("/", (req, res) => res.send(`File Upload`));
-
+// users
+app.use("/api/v1/users", user);
 // products
 app.use("/api/v1/products", product);
 //not found
@@ -35,7 +37,6 @@ app.use(notFound);
 app.use(errorHandler);
 const start = async () => {
   try {
-    await connectDB();
     app.listen(port, console.log(`server is listening on port ${port}`));
   } catch (error) {
     console.log(error);
