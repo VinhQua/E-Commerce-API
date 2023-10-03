@@ -13,7 +13,8 @@ const fileUpload = require("express-fileupload");
 //Swagger UI
 
 //extra security packages
-
+const cors = require('cors')
+app.use(cors())
 const port = process.env.PORT || 3000;
 app.set("trust proxy", true);
 //middlewares
