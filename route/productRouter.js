@@ -1,10 +1,19 @@
 const express = require("express");
 const router = express.Router();
+
 const {
-  createdProduct,
+  createProduct,
   getAllProducts,
+  uploadImage,
+  getSingleProduct,
+  updateProduct,
+  deleteProduct,
 } = require("../controllers/productControllers");
-const { uploadImage } = require("../controllers/uploadImage");
-router.route("/").get(getAllProducts).post(createdProduct);
+router.route("/").get(getAllProducts).post(createProduct);
+router
+  .route("/:id")
+  .get(getSingleProduct)
+  .patch(updateProduct)
+  .delete(deleteProduct);
 router.route("/uploadImage").post(uploadImage);
 module.exports = router;
