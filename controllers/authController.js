@@ -1,4 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
+const { User } = require("../models/user");
 const register = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "register" });
 };
