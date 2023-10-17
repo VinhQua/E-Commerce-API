@@ -1,6 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 const getAllUsers = async (req, res) => {
-  res.status(StatusCodes.OK).json({ msg: "all users" });
+  res.status(StatusCodes.OK).json({ msg: "all users", user: req.user });
 };
 const getSingleUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "get single user" });
@@ -8,4 +8,8 @@ const getSingleUser = async (req, res) => {
 const showCurrentUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "show current user" });
 };
-module.exports = { getAllUsers, getSingleUser, showCurrentUser };
+const updateUser = async (req, res) => {
+  res.status(StatusCodes.OK).json({ msg: "update user" });
+};
+
+module.exports = { getAllUsers, getSingleUser, showCurrentUser, updateUser };

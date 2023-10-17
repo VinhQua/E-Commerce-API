@@ -1,22 +1,27 @@
-const jwt = require("jsonwebtoken");
-const { Unauthenticated } = require("../errors");
+const { Unauthenticated, Unauthorize } = require("../errors");
+const { decodeToken } = require("../utils");
 
-const authMiddleware = async (req, res, next) => {
-  const authHeaders = req.headers.authorization;
-
-  if (!authHeaders || !authHeaders.startsWith("Bearer ")) {
-    throw new Unauthenticated("Invalid Token");
+const authenticate = async (req, res, next) => {
+  const { token } = req.signedCookies;
+  if (!token) {
+    throw new Unauthenticated("No token provided");
   }
-  const token = authHeaders.split(" ")[1];
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const isTestUser = decoded.userID === 17;
-    // console.log(decoded);
-    req.user = { id: decoded.userID, userName: decoded.userName, isTestUser };
+    const payload = decodeToken(token);
+
+    req.user = { name: payload.name, email: payload.email, role: payload.role };
     next();
   } catch (error) {
-    throw new Unauthenticated(`Invalid or Expired Token`);
+    throw new Unauthenticated("Invalid Token");
   }
 };
+const authorizePermission = (...roles) => {
+  return (req, res, next) => {
+    if (roles.includes(req.user.role)) {
+      return next();
+    }
+    throw new Unauthorize("Permission Denied");
+  };
+};
 
-module.exports = authMiddleware;
+module.exports = { authenticate, authorizePermission };

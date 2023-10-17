@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../db/connect");
 const userBcrypt = require("sequelize-bcrypt");
+const jwt = require("jsonwebtoken");
 const User = sequelize.define(
   "User",
   {
@@ -52,12 +53,24 @@ const User = sequelize.define(
     },
     role: {
       type: DataTypes.STRING,
-
+      defaultValue: "user",
       validate: {
         isIn: {
           args: [["admin", "user"]],
           msg: "role: admin or user",
         },
+      },
+    },
+    token: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return jwt.sign(
+          { name: this.name, email: this.email, role: this.role },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: process.env.JWT_LIFETIME,
+          }
+        );
       },
     },
   },
@@ -73,6 +86,6 @@ userBcrypt(User, {
 const syncTable = async () => {
   User.sync({ alter: true });
 };
-syncTable();
+// syncTable();
 
 module.exports = { User };

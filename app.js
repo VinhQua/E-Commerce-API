@@ -1,10 +1,10 @@
 require("dotenv").config();
 require("express-async-errors");
 const express = require("express");
-
+const cookieParser = require("cookie-parser");
 const errorHandler = require("./middlewares/error-handler");
 const notFound = require("./middlewares/not-found");
-const authMiddleware = require("./middlewares/auth");
+
 // Routes
 const product = require("./route/productRouter");
 const auth = require("./route/authRouter");
@@ -24,7 +24,7 @@ app.set("trust proxy", true);
 //middlewares
 app.use(express.static("./public"));
 app.use(express.json());
-
+app.use(cookieParser(process.env.JWT_SECRET));
 //routes
 app.get("/", (req, res) => res.send(`File Upload`));
 // auth
