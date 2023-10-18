@@ -1,4 +1,5 @@
+const { hashPassword } = require("./bcrypt");
 const { attachCookiesToResponse } = require("./cookie");
 const { decodeToken } = require("./jwt");
 
-module.exports = { decodeToken, attachCookiesToResponse };
+module.exports = { hashPassword, decodeToken, attachCookiesToResponse };
