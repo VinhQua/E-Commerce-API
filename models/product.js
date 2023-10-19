@@ -104,7 +104,7 @@ const Product = sequelize.define(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
-    userId: {
+    UserId: {
       type: DataTypes.INTEGER,
       references: {
         model: User,

@@ -69,6 +69,6 @@ const Review = sequelize.define(
 const syncTable = async () => {
   Review.sync({ alter: true });
 };
-syncTable();
+// syncTable();
 
 module.exports = { Review };

@@ -7,7 +7,9 @@ const {
   updateOrder,
   getAllUserOrders,
 } = require("../controllers/orderController");
-router.route("/").get(getAllOrders).post(createOrder);
+const { authenticate, authorizePermission } = require("../middlewares/auth");
+
+router.route("/").get(getAllOrders).post(authenticate, createOrder);
 router.route("/showAllMyOrders").get(getAllUserOrders);
 router.route("/:id").get(getSingleOrder).patch(updateOrder);
 module.exports = router;
