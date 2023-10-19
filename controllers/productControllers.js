@@ -1,7 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const { Product } = require("../models/product");
 const { Op } = require("sequelize");
-const { uploadBasic } = require("../utils/googledrive");
+
 const getAllProducts = async (req, res) => {
   const { featured, freeShipping, company, category, numericFilters, search } =
     req.body;
@@ -70,14 +70,15 @@ const deleteProduct = async (req, res) => {
 };
 const updateProduct = async (req, res) => {
   // const product = await Product.create(req.body);
+
   res.status(StatusCodes.OK).json({ msg: "update product" });
 };
 const uploadImage = async (req, res) => {
   // const product = await Product.create(req.body);
+
   const image = req.files.image;
 
-  await uploadBasic(image.tempFilePath);
-  res.status(StatusCodes.OK).json({ image });
+  res.status(StatusCodes.OK).json({ result, image });
 };
 
 module.exports = {
