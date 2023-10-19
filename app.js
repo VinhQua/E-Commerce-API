@@ -4,7 +4,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const errorHandler = require("./middlewares/error-handler");
 const notFound = require("./middlewares/not-found");
-
+const fileUpload = require("express-fileupload");
 // Routes
 const product = require("./route/productRouter");
 const auth = require("./route/authRouter");
@@ -25,6 +25,7 @@ app.set("trust proxy", true);
 app.use(express.static("./public"));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
+app.use(fileUpload({ useTempFiles: true }));
 //routes
 app.get("/", (req, res) => res.send(`File Upload`));
 // auth
