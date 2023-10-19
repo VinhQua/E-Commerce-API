@@ -1,4 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
+const { Review } = require("../models/review");
 const getAllReviews = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "get all reviews" });
 };

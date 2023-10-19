@@ -21,12 +21,12 @@ const showCurrentUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user });
 };
 const updateUser = async (req, res) => {
-  let { password, name, email, id } = req.body;
-
+  const { password, name, email, id } = req.body;
+  const updatedUser = { name, email };
   if (password) {
-    password = await hashPassword(password);
+    updatedUser.password = await hashPassword(password);
   }
-  const user = await User.update({ name, email, password }, { where: { id } });
+  const user = await User.update({ ...updatedUser }, { where: { id } });
   if (!user) {
     throw new NotFound(`no user with id ${id}`);
   }

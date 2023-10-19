@@ -64,7 +64,7 @@ const Product = sequelize.define(
       validate: {
         isIn: {
           args: [["office", "kitchen", "bedroom"]],
-          msg: "validate value is not supported",
+          msg: "category value is not supported",
         },
       },
     },

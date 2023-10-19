@@ -1,4 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
+const { Order } = require("../models/order");
 const createOrder = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "create order" });
 };
