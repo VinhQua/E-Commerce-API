@@ -2,7 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 const { Product } = require("../models/product");
 const { Op } = require("sequelize");
 const { uploadFileToGoogleDrive } = require("../utils");
-
+const { BadRequest } = require("../errors");
 const getAllProducts = async (req, res) => {
   const { featured, freeShipping, company, category, numericFilters, search } =
     req.body;
@@ -77,10 +77,19 @@ const updateProduct = async (req, res) => {
 const uploadImage = async (req, res) => {
   // const product = await Product.create(req.body);
 
-  const image = req.files.image;
-  const result = await uploadFileToGoogleDrive(image);
+  if (!req.files) {
+    throw new BadRequest("No file upload");
+  }
+  const imageOptions = ["png", "jpg", "svg", "jpeg", "gif"];
 
-  res.status(StatusCodes.OK).json({ image, result });
+  const image = req.files.image;
+  if (!image.mimetype.includes("image")) {
+    throw new BadRequest("please upload an image");
+  }
+  const uploadedLink = await uploadFileToGoogleDrive(image);
+  console.log(image);
+
+  res.status(StatusCodes.OK).json({ uploadedLink });
 };
 
 module.exports = {
