@@ -1,6 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const { Product } = require("../models/product");
 const { Op } = require("sequelize");
+const { uploadFileToGoogleDrive } = require("../utils");
 
 const getAllProducts = async (req, res) => {
   const { featured, freeShipping, company, category, numericFilters, search } =
@@ -77,8 +78,9 @@ const uploadImage = async (req, res) => {
   // const product = await Product.create(req.body);
 
   const image = req.files.image;
+  const result = await uploadFileToGoogleDrive(image);
 
-  res.status(StatusCodes.OK).json({ result, image });
+  res.status(StatusCodes.OK).json({ image, result });
 };
 
 module.exports = {
