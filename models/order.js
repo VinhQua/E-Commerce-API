@@ -1,4 +1,4 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes, Sequelize } = require("sequelize");
 const { sequelize } = require("../db/connect");
 
 const SingleOrderItem = sequelize.define(
@@ -112,7 +112,7 @@ const Order = sequelize.define(
       },
     },
 
-    // orderItems: [SingleOrderItem],
+    orderItems: Sequelize.ARRAY(Sequelize.JSON),
     status: {
       type: DataTypes.STRING,
       defaultValue: "pending",
@@ -159,10 +159,10 @@ const Order = sequelize.define(
   { tableName: "Order", modelName: "Order" }
 );
 
-const syncTable = async () => {
-  SingleOrderItem.sync({ alter: true });
-  Order.sync({ alter: true });
-};
+// const syncTable = async () => {
+//   // SingleOrderItem.sync({ alter: true });
+//   Order.sync({ alter: true });
+// };
 // syncTable();
 
 module.exports = { Order };

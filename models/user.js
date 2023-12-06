@@ -65,7 +65,12 @@ const User = sequelize.define(
       type: DataTypes.VIRTUAL,
       get() {
         return jwt.sign(
-          { name: this.name, email: this.email, role: this.role },
+          {
+            name: this.name,
+            email: this.email,
+            role: this.role,
+            userId: this.id,
+          },
           process.env.JWT_SECRET,
           {
             expiresIn: process.env.JWT_LIFETIME,

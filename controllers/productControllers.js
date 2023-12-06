@@ -1,8 +1,9 @@
 const { StatusCodes } = require("http-status-codes");
 const { Product } = require("../models/product");
 const { Op } = require("sequelize");
-const { uploadFileToGoogleDrive } = require("../utils");
-const { BadRequest } = require("../errors");
+const { BadRequest, NotFound } = require("../errors");
+const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
 const getAllProducts = async (req, res) => {
   const { featured, freeShipping, company, category, numericFilters, search } =
     req.body;
@@ -54,25 +55,41 @@ const getAllProducts = async (req, res) => {
   res.status(StatusCodes.OK).json({ products });
 };
 const createProduct = async (req, res) => {
-  if (req.body.length > 1) {
-    const products = await Product.bulkCreate(req.body);
-    return res.status(StatusCodes.CREATED).json({ products });
-  }
+  // if (req.body.length > 1) {
+  //   const products = await Product.bulkCreate(req.body);
+  //   return res.status(StatusCodes.CREATED).json({ products });
+  // }
+  req.body.UserId = req.user.userId;
   const product = await Product.create(req.body);
   return res.status(StatusCodes.CREATED).json({ product });
 };
 const getSingleProduct = async (req, res) => {
-  // const product = await Product.create(req.body);
-  res.status(StatusCodes.OK).json({ msg: "get single product" });
+  const { id } = req.params;
+  const product = await Product.findOne({ where: { id } });
+  if (!product) {
+    throw new NotFound(`no product with id ${id}`);
+  }
+  res.status(StatusCodes.OK).json({ product });
 };
 const deleteProduct = async (req, res) => {
-  // const product = await Product.create(req.body);
-  res.status(StatusCodes.OK).json({ msg: "delete product" });
+  const { id } = req.params;
+  const product = await Product.destroy({
+    where: {
+      id,
+    },
+  });
+  if (!product) {
+    throw new NotFound(`not product with id ${id}`);
+  }
+  res.status(StatusCodes.OK).json({ msg: "Success! product deleted" });
 };
 const updateProduct = async (req, res) => {
-  // const product = await Product.create(req.body);
-
-  res.status(StatusCodes.OK).json({ msg: "update product" });
+  const { id } = req.params;
+  const product = await Product.update(req.body, { where: { id } });
+  if (!product) {
+    throw new NotFound(`no product with id ${id}`);
+  }
+  res.status(StatusCodes.OK).json({ product });
 };
 const uploadImage = async (req, res) => {
   // const product = await Product.create(req.body);
@@ -80,15 +97,14 @@ const uploadImage = async (req, res) => {
   if (!req.files) {
     throw new BadRequest("No file upload");
   }
-  const imageOptions = ["png", "jpg", "svg", "jpeg", "gif"];
 
   const image = req.files.image;
-  if (!image.mimetype.includes("image")) {
-    throw new BadRequest("please upload an image");
-  }
-  const uploadedLink = await uploadFileToGoogleDrive(image);
   console.log(image);
-
+  const uploadedLink = await cloudinary.uploader.upload(image.tempFilePath, {
+    folder: "kHai Tam Space",
+    use_filename: true,
+  });
+  fs.unlinkSync(image.tempFilePath);
   res.status(StatusCodes.OK).json({ uploadedLink });
 };
 

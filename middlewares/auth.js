@@ -9,7 +9,12 @@ const authenticate = async (req, res, next) => {
   try {
     const payload = decodeToken(token);
 
-    req.user = { name: payload.name, email: payload.email, role: payload.role };
+    req.user = {
+      userId: payload.userId,
+      name: payload.name,
+      email: payload.email,
+      role: payload.role,
+    };
     next();
   } catch (error) {
     throw new Unauthenticated("Invalid Token");

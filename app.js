@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const errorHandler = require("./middlewares/error-handler");
 const notFound = require("./middlewares/not-found");
 const fileUpload = require("express-fileupload");
+const cloudinary = require("cloudinary");
 // Routes
 const product = require("./route/productRouter");
 const auth = require("./route/authRouter");
@@ -26,6 +27,12 @@ app.use(express.static("./public"));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 app.use(fileUpload({ useTempFiles: true }));
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+  secure: true,
+});
 //routes
 app.get("/", (req, res) => res.send(`File Upload`));
 // auth
